@@ -13,7 +13,7 @@ Running Backs:
     - Total redzone carry touchdowns / carry weight per redzone carry
     - Explains a players ability to capitalize on high value carries
     - Highly valued by model
-- Red Zone Carry Capitalization Score
+- Red Zone Target Capitalization Score
     - Same as Red Zone Carry Capitalization Score, but for passing plays
 
 Wide Receivers:
