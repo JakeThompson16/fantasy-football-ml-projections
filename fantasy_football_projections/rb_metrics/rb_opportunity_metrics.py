@@ -1,11 +1,20 @@
 
 from functools import lru_cache
+
 import polars as pl
 from polars import Int32
+
 from fantasy_football_projections.config import CURRENT_SEASON
-from fantasy_football_projections.data_loading.player_data import load_snap_shares, load_player_stats, \
-    load_ff_opportunity_data, get_rb_ids
-from fantasy_football_projections.rb_metrics.utility import rusher_opportunity_bounds
+
+from fantasy_football_projections.data_loading.player_data import (
+    load_snap_shares,
+    load_player_stats,
+    load_ff_opportunity_data,
+    get_rb_ids,
+)
+
+from fantasy_football_projections.rb_metrics.utility import rusher_opportunity_bounds, get_rb_opportunity_cols
+
 
 @lru_cache(maxsize=None)
 def get_rb_snap_shares(*seasons):
@@ -124,12 +133,3 @@ def rb_opportunity_scores(seasons: list[int] | int)->pl.DataFrame:
 
     cols = get_rb_opportunity_cols() + ["player_id", "week", "season"]
     return opportunity_data.select(cols)
-
-def get_rb_opportunity_cols()->list[str]:
-    """
-    Cols also include 'week', 'season', and 'player_id'
-    :return: List of cols in df returned by rb_opportunity_scores
-    """
-    return [
-        "rushing_opportunity", "receiving_opportunity"
-    ]

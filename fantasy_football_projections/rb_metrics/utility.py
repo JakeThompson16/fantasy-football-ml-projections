@@ -114,11 +114,26 @@ def get_rb_efficiency_cols()->list[str]:
         "fpoints_per_carry", "fpoints_per_target"
     ]
 
+def get_rb_defensive_cols()->list[str]:
+    """
+    Cols also include 'week', 'season', and 'defteam'
+    :return: Statistical cols for rb_defensive features
+    """
+    return [
+        "rush_epa_per_carry_against", "receiving_epa_per_target_against",
+        "redzone_efficiency_allowed", "rush_fpoints_per_carry_against",
+        "rec_fpoints_per_carry_against", "rush_yards_per_carry_against",
+        "rec_yards_per_target_against", "explosive_rush_rate_against",
+        "explosive_rec_rate_against", "successful_rush_rate_against",
+        "successful_target_rate_against"
+    ]
+
 def get_rb_training_cols()->list[str]:
     """
     :return: Statistical cols for all rb features
     """
     eff_cols = get_rb_efficiency_cols()
     opp_cols = get_rb_opportunity_cols()
+    def_cols = get_rb_defensive_cols()
 
-    return eff_cols + opp_cols
+    return eff_cols + opp_cols + def_cols

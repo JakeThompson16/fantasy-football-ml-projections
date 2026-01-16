@@ -1,8 +1,24 @@
 
 import polars as pl
-from fantasy_football_projections.config import PPR, POINTS_PER_RUSH_YARD, POINTS_PER_RUSH_TD, \
-    POINTS_PER_REC_YARD, POINTS_PER_REC_TD, EXPLOSIVE_RUN, EXPLOSIVE_RECEPTION
-from fantasy_football_projections.data_loading.player_data import load_player_stats, load_pbp_data, get_rb_ids
+
+from fantasy_football_projections.config import (
+    PPR,
+    POINTS_PER_RUSH_YARD,
+    POINTS_PER_RUSH_TD,
+    POINTS_PER_REC_YARD,
+    POINTS_PER_REC_TD,
+    EXPLOSIVE_RUN,
+    EXPLOSIVE_RECEPTION,
+)
+
+from fantasy_football_projections.data_loading.player_data import (
+    load_player_stats,
+    load_pbp_data,
+    get_rb_ids,
+)
+
+from fantasy_football_projections.rb_metrics.utility import get_rb_efficiency_cols
+
 
 # Metrics measuring a players ability to capitalize on their opportunities
 def rb_efficiency_metrics(seasons: list[int] | int)->pl.DataFrame:
@@ -222,14 +238,3 @@ def rb_efficiency_metrics(seasons: list[int] | int)->pl.DataFrame:
     cols = get_rb_efficiency_cols() + ["player_id", "week", "season"]
     return df.select(cols)
 
-def get_rb_efficiency_cols()->list[str]:
-    """
-    Cols from rb_efficiency_metrics() also include 'week', 'season', 'player_id'
-    :return: list of column names of df returned by rb_efficiency_metrics()
-    """
-    return [
-        "redzone_carry_efficiency", "redzone_target_efficiency",
-        "yards_per_carry", "yards_per_target", "successful_carry_rate",
-        "successful_target_rate", "explosive_carry_rate", "explosive_reception_rate",
-        "fpoints_per_carry", "fpoints_per_target"
-    ]
