@@ -2,9 +2,6 @@
 from functools import lru_cache
 import polars as pl
 from fantasy_football_projections.data_loading.player_data import load_ff_opportunity_data, load_player_stats
-from fantasy_football_projections.rb_metrics.rb_efficiency_metrics import get_rb_efficiency_cols
-from fantasy_football_projections.rb_metrics.rb_opportunity_metrics import get_rb_opportunity_cols
-
 
 @lru_cache(maxsize=None)
 def rusher_opportunity_bounds(season)->dict[str, float]:
@@ -95,6 +92,27 @@ def rusher_opportunity_bounds(season)->dict[str, float]:
         "receptions_exp_upper" : rec_hi,
         "receptions_exp_lower" : rec_lo
     }
+
+def get_rb_opportunity_cols()->list[str]:
+    """
+    Cols also include 'week', 'season', and 'player_id'
+    :return: List of cols in df returned by rb_opportunity_scores
+    """
+    return [
+        "rushing_opportunity", "receiving_opportunity"
+    ]
+
+def get_rb_efficiency_cols()->list[str]:
+    """
+    Cols from rb_efficiency_metrics() also include 'week', 'season', 'player_id'
+    :return: list of column names of df returned by rb_efficiency_metrics()
+    """
+    return [
+        "redzone_carry_efficiency", "redzone_target_efficiency",
+        "yards_per_carry", "yards_per_target", "successful_carry_rate",
+        "successful_target_rate", "explosive_carry_rate", "explosive_reception_rate",
+        "fpoints_per_carry", "fpoints_per_target"
+    ]
 
 def get_rb_training_cols()->list[str]:
     """
