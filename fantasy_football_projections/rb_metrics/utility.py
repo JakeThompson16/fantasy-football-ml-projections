@@ -1,7 +1,10 @@
+
 from functools import lru_cache
-from typing import List
 import polars as pl
 from fantasy_football_projections.data_loading.player_data import load_ff_opportunity_data, load_player_stats
+from fantasy_football_projections.rb_metrics.rb_efficiency_metrics import get_rb_efficiency_cols
+from fantasy_football_projections.rb_metrics.rb_opportunity_metrics import get_rb_opportunity_cols
+
 
 @lru_cache(maxsize=None)
 def rusher_opportunity_bounds(season)->dict[str, float]:
@@ -92,3 +95,12 @@ def rusher_opportunity_bounds(season)->dict[str, float]:
         "receptions_exp_upper" : rec_hi,
         "receptions_exp_lower" : rec_lo
     }
+
+def get_rb_training_cols()->list[str]:
+    """
+    :return: Statistical cols for all rb features
+    """
+    eff_cols = get_rb_efficiency_cols()
+    opp_cols = get_rb_opportunity_cols()
+
+    return eff_cols + opp_cols
