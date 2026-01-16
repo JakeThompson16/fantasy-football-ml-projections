@@ -1,10 +1,10 @@
 
 import polars as pl
 
-from config import POINTS_PER_RUSH_YARD, POINTS_PER_RUSH_TD, EXPLOSIVE_RUN, PPR, POINTS_PER_REC_YARD, POINTS_PER_REC_TD, \
+from fantasy_football_projections.config import POINTS_PER_RUSH_YARD, POINTS_PER_RUSH_TD, EXPLOSIVE_RUN, PPR, POINTS_PER_REC_YARD, POINTS_PER_REC_TD, \
     EXPLOSIVE_RECEPTION
-from data_loading.player_data import load_pbp_data, get_rb_ids
-from rb_metrics.utility import get_rb_defensive_cols
+from fantasy_football_projections.data_loading.player_data import load_pbp_data, get_rb_ids
+from fantasy_football_projections.rb_metrics.utility import get_rb_defensive_cols
 
 
 def rb_defensive_metrics(seasons: list[int] | int) -> pl.DataFrame:
@@ -37,14 +37,14 @@ def rb_defensive_metrics(seasons: list[int] | int) -> pl.DataFrame:
         .alias("redzone_carry"),
 
         # Redzone rush tds
-        pl.when(pl.col("yardline_100") <= 20 & pl.col("rush_touchdown") == 1)
+        pl.when((pl.col("yardline_100") <= 20) & (pl.col("rush_touchdown") == 1))
         .then(1)
         .otherwise(0)
         .alias("redzone_rush_td"),
 
         # Fantasy points gained
-        pl.col("yards_gained") * POINTS_PER_RUSH_YARD +
-        pl.col("rush_touchdown") * POINTS_PER_RUSH_TD
+        (pl.col("yards_gained") * POINTS_PER_RUSH_YARD +
+        pl.col("rush_touchdown") * POINTS_PER_RUSH_TD)
         .alias("rush_fpoints_gained"),
 
         # Rushing yards
@@ -150,7 +150,7 @@ def rb_defensive_metrics(seasons: list[int] | int) -> pl.DataFrame:
         pl.col("target").sum().alias("targets"),
 
         # Receiving yards
-        pl.col("receiving_yard").sum().alias("receiving_yards"),
+        pl.col("receiving_yards").sum().alias("receiving_yards_total"),
 
         # Receiving epa
         pl.col("receiving_epa").sum().alias("receiving_epa_total")
