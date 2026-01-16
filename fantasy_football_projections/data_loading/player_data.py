@@ -1,5 +1,7 @@
 
 from functools import lru_cache
+from typing import List
+
 import nflreadpy as nfl
 import polars as pl
 
@@ -7,7 +9,8 @@ import polars as pl
 # Caches and returns player stats for seasons
 @lru_cache(maxsize=None)
 def load_player_stats(*seasons):
-    return nfl.load_player_stats(list(seasons))
+    data = nfl.load_player_stats(seasons=list(seasons))
+    return data
 
 # Caches and returns player stats for seasons by team
 @lru_cache(maxsize=None)
@@ -71,3 +74,34 @@ def get_id_map()->dict:
     id_map = dict(zip(player_ids["pfr_id"].to_list(), player_ids["gsis_id"].to_list()))
 
     return id_map
+
+# Caches and returns snap count data
+@lru_cache(maxsize=None)
+def load_snap_shares(*seasons):
+    snap_counts = nfl.load_snap_counts(list(seasons)).select(
+        "pfr_player_id",
+        "offense_pct",
+        "week",
+        "season",
+        "position"
+    )
+    # Maps pfr_id to gsis_id
+    id_map = get_id_map()
+    snap_counts = snap_counts.with_columns(
+        pl.col("pfr_player_id").map_elements(lambda x: id_map.get(x))
+        .alias("gsis_id")
+    )
+    return snap_counts
+
+# Caches and returns fantasy football opportunity data
+@lru_cache(maxsize=None)
+def load_ff_opportunity_data(*seasons):
+    ff_data = nfl.load_ff_opportunity(seasons=list(seasons), stat_type="weekly")
+    return ff_data
+
+# Caches and returns a list of the ID's of all running backs
+@lru_cache(maxsize=None)
+def get_rb_ids()->List[str]:
+    player_ids = nfl.load_ff_playerids().select("gsis_id", "position")
+    player_ids = player_ids.filter(pl.col("position") == "RB")
+    return player_ids["gsis_id"].to_list()
