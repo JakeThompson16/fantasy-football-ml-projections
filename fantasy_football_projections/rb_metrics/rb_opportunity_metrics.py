@@ -33,8 +33,7 @@ def rb_opportunity_scores(seasons: list[int] | int)->pl.DataFrame:
     - keys: rushing_opportunity, receiving_opportunity
     :param seasons: Seasons to get opportunity rates for
     :return pl.DataFrame: Number in range [0, 1] where closer to 1 implies more opportunities
-    for rushing and receiving (week to week scores can technically exceed 1, but averages over
-    many games will not)
+    for rushing and receiving
     """
     if type(seasons) == int:
         seasons = [seasons]
@@ -115,19 +114,25 @@ def rb_opportunity_scores(seasons: list[int] | int)->pl.DataFrame:
     opportunity_data = opportunity_data.with_columns(
 
         # Rushing opportunity
-        (pl.col("offense_pct") * .30 +
-        pl.col("weighted_carries") * .25 +
-        pl.col("weighted_rush_yards_exp") * .20 +
-        pl.col("weighted_rush_touchdown_exp") * .15 +
-        pl.col("weighted_rush_first_down_exp") * .10)
+        (
+            pl.col("offense_pct") * .30 +
+            pl.col("weighted_carries") * .25 +
+            pl.col("weighted_rush_yards_exp") * .20 +
+            pl.col("weighted_rush_touchdown_exp") * .15 +
+            pl.col("weighted_rush_first_down_exp") * .10
+         )
+        .clip(lower_bound=0.0, upper_bound=1.0)
         .alias("rushing_opportunity"),
 
         # Receiving opportunity
-        (pl.col("weighted_targets") * .30 +
-         pl.col("receptions_exp_upper") * .25 +
-        pl.col("weighted_rec_yards_exp") * .20 +
-        pl.col("weighted_rec_touchdown_exp") * .15 +
-        pl.col("weighted_rec_first_down_exp") * .10)
+        (
+            pl.col("weighted_targets") * .30 +
+            pl.col("receptions_exp_upper") * .25 +
+            pl.col("weighted_rec_yards_exp") * .20 +
+            pl.col("weighted_rec_touchdown_exp") * .15 +
+            pl.col("weighted_rec_first_down_exp") * .10
+        )
+        .clip(lower_bound=0.0, upper_bound=1.0)
         .alias("receiving_opportunity")
     )
 
