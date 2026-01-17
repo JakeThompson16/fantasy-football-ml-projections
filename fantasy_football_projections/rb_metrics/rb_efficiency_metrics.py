@@ -235,6 +235,6 @@ def rb_efficiency_metrics(seasons: list[int] | int)->pl.DataFrame:
         .alias("fpoints_per_target"),
     )
 
-    cols = get_rb_efficiency_cols() + ["player_id", "week", "season"]
+    cols = get_rb_efficiency_cols() + ["player_id", "week", "season", "opponent_team"]
     return df.select(cols)
 

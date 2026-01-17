@@ -136,5 +136,5 @@ def rb_opportunity_scores(seasons: list[int] | int)->pl.DataFrame:
         .alias("receiving_opportunity")
     )
 
-    cols = get_rb_opportunity_cols() + ["player_id", "week", "season"]
+    cols = get_rb_opportunity_cols() + ["player_id", "week", "season", "opponent_team"]
     return opportunity_data.select(cols)
