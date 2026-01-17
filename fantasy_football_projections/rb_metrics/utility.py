@@ -108,10 +108,10 @@ def get_rb_efficiency_cols()->list[str]:
     :return: list of column names of df returned by rb_efficiency_metrics()
     """
     return [
-        "redzone_carry_efficiency", "redzone_target_efficiency",
-        "yards_per_carry", "yards_per_target", "successful_carry_rate",
-        "successful_target_rate", "explosive_carry_rate", "explosive_reception_rate",
-        "fpoints_per_carry", "fpoints_per_target"
+        "redzone_carries", "redzone_td_rushes", "explosive_rushes",
+        "redzone_targets", "redzone_td_receptions", "carries", "rec_fpoints_gained",
+        "rushing_yards", "targets", "receiving_yards", "explosive_receptions",
+        "successful_rushes", "successful_targets", "rush_fpoints_gained"
     ]
 
 def get_rb_defensive_cols()->list[str]:
@@ -120,12 +120,11 @@ def get_rb_defensive_cols()->list[str]:
     :return: Statistical cols for rb_defensive features
     """
     return [
-        "rush_epa_per_carry_against", "receiving_epa_per_target_against",
-        "redzone_efficiency_allowed", "rush_fpoints_per_carry_against",
-        "rec_fpoints_per_carry_against", "rush_yards_per_carry_against",
-        "rec_yards_per_target_against", "explosive_rush_rate_against",
-        "explosive_rec_rate_against", "successful_rush_rate_against",
-        "successful_target_rate_against"
+        "carries", "rush_epa_total", "explosive_receptions",
+        "targets", "receiving_epa_total", "successful_rushes",
+        "redzone_carries", "redzone_rush_tds", "successful_targets",
+        "rush_fpoints_total", "rec_fpoints_total", "rush_yards_total",
+        "receiving_yards_total", "explosive_rushes"
     ]
 
 def get_rb_training_cols()->list[str]:
@@ -137,3 +136,19 @@ def get_rb_training_cols()->list[str]:
     def_cols = get_rb_defensive_cols()
 
     return eff_cols + opp_cols + def_cols
+
+"""
+        RB Defense:
+        "rush_epa_per_carry_against", "receiving_epa_per_target_against",
+        "redzone_efficiency_allowed", "rush_fpoints_per_carry_against",
+        "rec_fpoints_per_carry_against", "rush_yards_per_carry_against",
+        "rec_yards_per_target_against", "explosive_rush_rate_against",
+        "explosive_rec_rate_against", "successful_rush_rate_against",
+        "successful_target_rate_against"
+        
+        RB Efficiency:
+        "redzone_carry_efficiency", "redzone_target_efficiency",
+        "yards_per_carry", "yards_per_target", "successful_carry_rate",
+        "successful_target_rate", "explosive_carry_rate", "explosive_reception_rate",
+        "fpoints_per_carry", "fpoints_per_target"
+"""
