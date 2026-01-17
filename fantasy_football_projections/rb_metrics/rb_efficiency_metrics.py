@@ -29,8 +29,8 @@ def rb_efficiency_metrics(seasons: list[int] | int)->pl.DataFrame:
     :return: Data frame of weekly efficiency metrics for every rb in seasons
     """
 
-    df = load_player_stats(seasons).filter(pl.col("position") == "RB")
-    pbp_stats = load_pbp_data(seasons)
+    df = load_player_stats(*seasons).filter(pl.col("position") == "RB")
+    pbp_stats = load_pbp_data(*seasons)
 
     rb_ids = get_rb_ids()
 
